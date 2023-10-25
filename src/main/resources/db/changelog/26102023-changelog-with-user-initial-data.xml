@@ -1,0 +1,33 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="0007-create-sequence-for-users-table" author="Fedorenko">
+        <createSequence sequenceName="user_sequence" dataType="bigint" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="0008-create-users-table" author="Fedorenko">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="username" type="VARCHAR(15)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Fedorenko" id="0009-insert-editor-user">
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="username" value="editor"/>
+            <column name="password" value="password"/>
+            <column name="role" value="EDITOR"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

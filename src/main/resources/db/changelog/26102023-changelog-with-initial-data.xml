@@ -1,0 +1,69 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="0001-create-sequence-for-weather-records-table" author="Fedorenko">
+        <createSequence sequenceName="weather_records_sequence" dataType="bigint" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="0002-create-weather-records-table" author="Fedorenko">
+        <createTable tableName="weather_records">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lon" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lat" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="0003-create-temperatures-table" author="Fedorenko">
+        <createTable tableName="temperatures">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="weather_data_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="0004-add-foreign-key-to-temperatures" author="Fedorenko">
+        <addForeignKeyConstraint baseTableName="temperatures" baseColumnNames="weather_data_id"
+                                 referencedTableName="weather_records" referencedColumnNames="id"
+                                 constraintName="fk_temperatures_weather_records"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="0005-insert-into-weather_records-table" author="Fedorenko">
+        <loadData tableName="weather_records"
+                  file="data/26102023-initial-data_weather_records.csv"
+                  relativeToChangelogFile="true"
+                  commentLineStartsWith=""
+                  usePreparedStatements="true">
+            <column name="lon" type="numeric"/>
+            <column name="lat" type="numeric"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="0006-insert-into-temperatures-table" author="Fedorenko">
+        <loadData tableName="temperatures"
+                  file="data/26102023-initial-data_temperatures.csv"
+                  relativeToChangelogFile="true"
+                  commentLineStartsWith=""
+                  usePreparedStatements="true">
+            <column name="temperature" type="numeric"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
